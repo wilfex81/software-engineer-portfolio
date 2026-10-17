@@ -1,14 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '../lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Menu, Moon, Sun, X } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTheme } from 'next-themes';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,6 +59,22 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+  };
+
+  const themeToggle = (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-md text-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
+      aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
+      title={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
+    >
+      {resolvedTheme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
+  );
+
   return (
     <header
       className={cn(
@@ -75,8 +93,9 @@ const Navbar: React.FC = () => {
         </a>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:block">
-          <ul className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
+          <nav className="hidden md:block">
+            <ul className="flex items-center gap-8">
             {navLinks.map((link) => (
               <li key={link.name}>
                 <a 
@@ -88,17 +107,22 @@ const Navbar: React.FC = () => {
                 </a>
               </li>
             ))}
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+          <div className="hidden md:block">{themeToggle}</div>
+        </div>
 
         {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden z-50 text-foreground" 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-        >
-          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden z-50">
+          {themeToggle}
+          <button
+            className="text-foreground"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (

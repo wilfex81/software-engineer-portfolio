@@ -11,7 +11,7 @@ const SkillBadge: React.FC<SkillBadgeProps> = ({ name, className }) => {
   return (
     <div 
       className={cn(
-        "px-3 py-1.5 rounded-full bg-gray-100 text-black text-xs font-medium inline-flex items-center justify-center transition-transform hover:scale-105",
+        "px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground text-xs font-medium inline-flex items-center justify-center transition-transform hover:scale-105",
         className
       )}
     >
