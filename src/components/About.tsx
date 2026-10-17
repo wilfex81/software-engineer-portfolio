@@ -11,10 +11,12 @@ const About: React.FC = () => {
     threshold: 0.1,
   });
   
-  const skills = [
-    "GenAI", "Python/Django", "React", "Linux", "Docker", 
-    "Kubernetes", "Kafka", "WebSockets", "MongoDB", "Postgres",  
-    "Terraform", "TypeScript", "JavaScript", "AWS", "firebase", "Redis","Git/Github"
+  const skillGroups = [
+    { label: "Languages", items: ["Python", "Go", "TypeScript", "JavaScript"] },
+    { label: "Backend", items: ["Django", "Django REST Framework", "WebSockets", "Kafka", "GenAI integrations"] },
+    { label: "Data stores", items: ["PostgreSQL", "MongoDB", "Redis", "Firebase"] },
+    { label: "Cloud and DevOps", items: ["AWS", "Docker", "Kubernetes", "Terraform", "Linux", "Git and GitHub"] },
+    { label: "Frontend", items: ["React"] },
   ];
   
   const experiences = [
@@ -57,8 +59,7 @@ const About: React.FC = () => {
             Background & Expertise
           </h2>
           <p className="max-w-2xl mx-auto text-muted-foreground leading-relaxed">
-            Technical skills, professional journey, and the approach that drives 
-            innovation in software engineering.
+            Technical skills, professional experience, and how I approach backend engineering.
           </p>
         </div>
         
@@ -68,19 +69,29 @@ const About: React.FC = () => {
               Technical Skills
             </h3>
             
-            <div className="flex flex-wrap gap-2 mb-8">
-              {skills.map((skill, index) => (
-                <div 
-                  key={skill}
+            <div className="space-y-5 mb-8">
+              {skillGroups.map((group, gi) => (
+                <div
+                  key={group.label}
                   className={cn(
-                    "opacity-0 transform translate-y-4 transition-all duration-500", 
+                    "opacity-0 transform translate-y-4 transition-all duration-500",
                     inView && "opacity-100 translate-y-0"
-                  )} 
-                  style={{ transitionDelay: `${index * 0.03}s` }}
+                  )}
+                  style={{ transitionDelay: `${gi * 0.08}s` }}
                 >
-                  <span className="text-xs font-medium px-3 py-1.5 bg-secondary/50 border border-border/50 text-secondary-foreground rounded-md hover:bg-secondary hover:border-border transition-colors cursor-default">
-                    {skill}
-                  </span>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                    {group.label}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((skill) => (
+                      <span
+                        key={skill}
+                        className="text-xs font-medium px-3 py-1.5 bg-secondary/50 border border-border/50 text-secondary-foreground rounded-md hover:bg-secondary hover:border-border transition-colors cursor-default"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -93,15 +104,14 @@ const About: React.FC = () => {
               style={{ transitionDelay: "0.6s" }}
             >
               <h4 className="text-xl font-semibold mb-4 tracking-tight">
-                Philosophy
+                How I work
               </h4>
               <p className="text-muted-foreground mb-4 leading-relaxed">
-                Passionate about building high-performance applications and fostering collaborative 
-                engineering culture. Believer in clean code, thoughtful architecture, and continuous learning.
+                I start from the data model and the API contract, then build the service around them. 
+                Changes ship through automated pipelines, and behavior in production is visible through logs and metrics.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Development philosophy focuses on creating scalable solutions that solve real problems 
-                while maintaining code quality and exceptional user experience.
+                I lead small teams, review code, and write down design decisions so the next engineer can follow them.
               </p>
             </div>
           </div>
@@ -145,8 +155,8 @@ const About: React.FC = () => {
                 Cloud & Infrastructure
               </h4>
               <p className="text-muted-foreground leading-relaxed">
-                Specialized in designing and implementing cloud infrastructure on AWS, with expertise 
-                in containerization using Docker and Kubernetes, and robust CI/CD pipelines for seamless deployment.
+                I provision and run backend stacks on AWS with Terraform: EC2, ECS, ECR, RDS and Aurora, Lambda, 
+                API Gateway, S3, Cognito and CloudWatch. Services are containerized with Docker and deployed through CI/CD pipelines.
               </p>
             </div>
           </div>

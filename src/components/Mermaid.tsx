@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 
@@ -8,37 +7,33 @@ interface MermaidProps {
 
 const Mermaid: React.FC<MermaidProps> = ({ chart }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [rendered, setRendered] = useState(false);
-  const [id] = useState(`mermaid-${Math.random().toString(36).substr(2, 9)}`);
+  const [id] = useState(`mermaid-${Math.random().toString(36).slice(2, 11)}`);
 
   useEffect(() => {
+    if (!ref.current || !chart) return;
+    const isDark = document.documentElement.classList.contains('dark');
     mermaid.initialize({
-      startOnLoad: true,
-      theme: 'neutral',
-      securityLevel: 'loose',
-      fontFamily: 'Inter, sans-serif'
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'neutral',
+      securityLevel: 'strict',
+      fontFamily: 'Inter, sans-serif',
     });
-  }, []);
-
-  useEffect(() => {
-    if (ref.current && chart) {
-      mermaid.render(id, chart).then((result) => {
-        if (ref.current) {
-          ref.current.innerHTML = result.svg;
-          setRendered(true);
-        }
-      }).catch((error) => {
+    mermaid
+      .render(id, chart)
+      .then((result) => {
+        if (ref.current) ref.current.innerHTML = result.svg;
+      })
+      .catch((error) => {
         console.error('Mermaid rendering error:', error);
         if (ref.current) {
-          ref.current.innerHTML = `<p class="text-destructive text-sm">Failed to render diagram</p>`;
+          ref.current.textContent = 'Diagram failed to load.';
         }
       });
-    }
   }, [chart, id]);
 
   return (
-    <div className="flex justify-center my-8 overflow-x-auto bg-card/50 p-4 rounded-xl border border-border/40">
-      <div key={id} ref={ref} className="mermaid-diagram" />
+    <div className="flex justify-center overflow-x-auto bg-card/50 p-4 rounded-xl border border-border/40">
+      <div ref={ref} className="w-full flex justify-center [&_svg]:max-w-full [&_svg]:h-auto" />
     </div>
   );
 };
