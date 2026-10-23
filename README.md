@@ -8,7 +8,7 @@ Live: https://wilfex-software-engineer-portfolio.vercel.app
 
 - **Projects** with an architecture diagram, key design decisions and API surface for each
   - **APEXSYNC**: Django REST API with a versioned tax compliance engine, forecasting and anomaly detection
-  - **Mini Redis**: Redis compatible server in Go with RESP, key expiry and append only file persistence (in progress)
+  - **Mini Redis**: Redis-compatible server in Go with RESP, key expiry, append-only file persistence, Docker packaging and CI
 - **About** with skills grouped by area and professional experience
 - **Contact** form and links
 

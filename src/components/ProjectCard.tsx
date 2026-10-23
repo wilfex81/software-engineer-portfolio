@@ -13,6 +13,7 @@ export interface ProjectCardProps {
   status?: string;
   problem?: string;
   decisions?: string[];
+  runCommands?: { label: string; commands: string[] }[];
   endpoints?: { method: string; path: string; purpose: string }[];
   architecture?: string;
   repoLink?: string;
@@ -32,6 +33,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   status,
   problem,
   decisions,
+  runCommands,
   endpoints,
   architecture,
   repoLink,
@@ -144,6 +146,22 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {runCommands && runCommands.length > 0 && (
+            <div>
+              <SectionTitle>Run it</SectionTitle>
+              <div className="space-y-4">
+                {runCommands.map((example) => (
+                  <div key={example.label}>
+                    <p className="mb-2 text-sm text-muted-foreground">{example.label}</p>
+                    <pre className="overflow-x-auto rounded-lg bg-muted p-4 text-xs leading-relaxed">
+                      <code>{example.commands.join("\n")}</code>
+                    </pre>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
