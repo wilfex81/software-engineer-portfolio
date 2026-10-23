@@ -49,26 +49,29 @@ const projectsData: ProjectData[] = [
   },
   {
     title: "Mini Redis",
-    status: "In progress",
+    status: "Shipped",
     description:
-      "A Redis compatible in-memory server written in Go. Speaks the RESP protocol over TCP, supports strings, hashes and lists with key expiry, and persists writes to an append only file.",
+      "A Redis-compatible in-memory server written in Go. Speaks RESP over TCP through a gnet event loop, supports strings, hashes and lists with key expiry, and persists writes to an append-only file.",
     problem:
       "Redis looks simple from the outside and hides a lot underneath: a wire protocol, concurrent access to shared state, expiry and durability. Building it from scratch is a direct way to work through those problems instead of reading about them.",
     architecture: `flowchart LR
-  C["redis-cli or client"] --> L["TCP listener"]
+  C["redis-cli or client"] --> L["gnet event loop"]
   L --> P["RESP parser"]
   P --> D["Command dispatcher"]
   D --> S[("In-memory store")]
   S --> E["Expiry"]
   D --> W["AOF writer"]
-  W --> F["Append only file"]`,
+  W --> F["Append-only file"]
+  F --> R["Replay and compaction"]`,
     decisions: [
-      "Part 1 uses only the Go standard library: a TCP server, a hand written RESP parser and the command set (PING, ECHO, SET, GET, DEL, INCR, EXISTS, KEYS).",
-      "Shared state is protected with a mutex, then extended with key expiry, hashes and lists.",
-      "Durability comes from an append only file that records write commands so state can be rebuilt on start.",
-      "Part 2 rebuilds the network layer on gnet, an event loop framework, to compare it against the standard library version.",
+      "The final network layer uses gnet's event loop, while the store, command handling and persistence remain independent of the transport.",
+      "A hand-written RESP parser preserves partial input between reads and handles multiple commands in one read, so real Redis clients work unchanged.",
+      "One RWMutex protects a typed keyspace, with expiry checked on access and cleaned up in the background. Wrong-type operations return Redis-compatible errors.",
+      "The append-only file records successful writes, fsyncs in the background, and replays into a compact snapshot on startup. Absolute expiry timestamps preserve TTLs across restarts.",
+      "The parser, command set, expiry behavior, persistence round trips and concurrent access are covered by tests that pass under the race detector.",
     ],
-    techStack: ["Go", "TCP", "RESP", "Concurrency", "AOF persistence", "gnet"],
+    techStack: ["Go", "gnet", "RESP", "Concurrency", "AOF persistence"],
+    repoLink: "https://github.com/wilfex81/mini-redis",
   },
 ];
 
