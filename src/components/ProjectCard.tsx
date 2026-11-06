@@ -17,7 +17,7 @@ export interface ProjectCardProps {
   endpoints?: { method: string; path: string; purpose: string }[];
   architecture?: string;
   repoLink?: string;
-  liveLink?: string;
+  packageLink?: string;
 }
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -37,13 +37,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   endpoints,
   architecture,
   repoLink,
-  liveLink,
+  packageLink,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalActive, setModalActive] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const titleId = `modal-title-${title.replace(/\s+/g, '-').toLowerCase()}`;
-  const primaryLink = repoLink || liveLink;
+  const primaryLink = repoLink || packageLink;
 
   const openModal = () => {
     setShowModal(true);
@@ -200,7 +200,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
           </div>
 
-          {(repoLink || liveLink) && (
+          {(repoLink || packageLink) && (
             <div className="pt-2 flex flex-wrap gap-3">
               {repoLink && (
                 <a
@@ -212,14 +212,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   <Github size={14} /> View source
                 </a>
               )}
-              {liveLink && (
+              {packageLink && (
                 <a
-                  href={liveLink}
+                  href={packageLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-5 py-2.5 border border-border rounded-lg hover:bg-muted transition-all"
                 >
-                  Live demo <ExternalLink size={14} />
+                  Container package <ExternalLink size={14} />
                 </a>
               )}
             </div>

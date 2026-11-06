@@ -9,6 +9,7 @@ Live: https://wilfex-software-engineer-portfolio.vercel.app
 - **Projects** with an architecture diagram, key design decisions and API surface for each
   - **APEXSYNC**: Django REST API with a versioned tax compliance engine, forecasting and anomaly detection
   - **Mini Redis**: Redis-compatible server in Go with RESP, key expiry, append-only file persistence, Docker packaging and CI
+  - **Rate Limiter**: Go HTTP rate limiter with three algorithms, trusted proxy handling and an atomic Redis backend
 - **About** with skills grouped by area and professional experience
 - **Contact** form and links
 
@@ -37,7 +38,7 @@ Projects live in `src/components/Projects.tsx` as plain objects. Fill in the sam
 | `architecture` | Mermaid diagram source |
 | `decisions` | Design decisions and trade offs |
 | `endpoints` | Optional API table |
-| `repoLink`, `liveLink` | Optional links |
+| `repoLink`, `packageLink` | Optional source and container package links |
 
 ## Structure
 

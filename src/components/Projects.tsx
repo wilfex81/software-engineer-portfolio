@@ -43,6 +43,57 @@ const projectsData: ProjectData[] = [
     ],
     techStack: ["Go", "gnet", "RESP", "Concurrency", "AOF persistence", "Docker", "GitHub Actions"],
     repoLink: "https://github.com/wilfex81/mini-redis",
+    packageLink: "https://github.com/wilfex81/mini-redis/pkgs/container/mini-redis",
+  },
+  {
+    title: "Rate Limiter",
+    status: "Shipped",
+    description:
+      "An HTTP rate limiter in Go with fixed-window, sliding-window and token-bucket algorithms behind one interface. It supports in-memory counters or an atomic Redis-backed token bucket for sharing limits across instances.",
+    problem:
+      "A single client can send requests fast enough to starve a server. The limiter needed predictable 429 responses, safe client identity handling behind trusted proxies, and a way to share token state when several instances sit behind a load balancer.",
+    architecture: `flowchart LR
+  C["HTTP client"] --> M["Middleware"]
+  M --> I["Client IP and trusted proxy handling"]
+  I --> S["Limiter store"]
+  S --> A["Allow decision"]
+  A --> H["Handler"]
+  A --> R["429 + Retry-After"]
+  S --> L["In-memory algorithms"]
+  S --> D["Redis token bucket"]
+  D --> X[("Redis")]`,
+    decisions: [
+      "Fixed-window, sliding-window and token-bucket algorithms share one Allow interface, so the middleware and store do not depend on a specific algorithm.",
+      "An injected clock keeps algorithm and cleanup tests deterministic without sleeps, while idle clients are removed only after they have had time to recover.",
+      "The Redis token bucket uses one Lua script and Redis's own clock, making token spending atomic across application instances.",
+      "Only explicitly trusted proxies can provide X-Real-IP. Untrusted headers are ignored so clients cannot choose another client's bucket.",
+      "The server validates settings at startup, keeps health checks outside the limited routes, and supports configurable fail-open or fail-closed behavior when Redis is unavailable.",
+    ],
+    runCommands: [
+      {
+        label: "Run the published Docker image",
+        commands: [
+          "docker run -d -p 8080:8080 ghcr.io/wilfex81/rate-limiter:latest -algo fixed -limit 3 -window 1m",
+          "for i in 1 2 3 4 5; do curl -s -o /dev/null -w \"%{http_code} \" localhost:8080/ping; done",
+        ],
+      },
+      {
+        label: "Run the test suite",
+        commands: ["go vet ./...", "go test -race ./..."],
+      },
+    ],
+    techStack: [
+      "Go",
+      "HTTP middleware",
+      "Rate limiting",
+      "Redis",
+      "Lua",
+      "Concurrency",
+      "Docker",
+      "GitHub Actions",
+    ],
+    repoLink: "https://github.com/wilfex81/rate-limiter#rate-limiter",
+    packageLink: "https://github.com/wilfex81/rate-limiter/pkgs/container/rate-limiter",
   },
   {
     title: "APEXSYNC",
